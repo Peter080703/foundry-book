@@ -20,6 +20,26 @@ Pin to a specific block for reproducible tests:
 $ forge test --fork-url https://ethereum.reth.rs/rpc --fork-block-number 18000000
 ```
 
+### Check historical state before forking
+
+For an older fork block, choose an RPC plan that serves historical state at
+that block. Confirm the available history and request limits with your
+provider. To compare advertised archive plans, use the
+[Chain.Love Ethereum API directory](https://mainnet.eth.chain.love/toolbox/apis).
+
+Check a contract your test reads at the pinned block. This example requests
+DAI's deployed code at Ethereum block 18000000.
+
+```bash
+$ RPC_URL=https://ethereum.reth.rs/rpc
+$ cast code 0x6B175474E89094C44Da98b954EedeAC495271d0F --block 18000000 --rpc-url "$RPC_URL"
+```
+
+The command returns a nonempty hex string for this contract and block. If your
+provider reports that historical state is unavailable, choose an endpoint
+with coverage at your fork block. For tests that read storage, also check
+the relevant slot at the same block.
+
 ### RPCs without state by block hash
 
 If your RPC serves fork state by block number but rejects reads by hash, enable
